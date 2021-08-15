@@ -38,17 +38,14 @@ void client_list()
 void send_msg(int sockid, char *s, int type){
     for(int i=0; i<MAX_CHAT_REACH; i++) {
         if(global_client[i]){
-            if(type == 0)
-            {
+            if(type == 0){
                 if (global_client[i]->socket != sockid) {
                     if (send(global_client[i]->socket, s, 4096, 0) < 0) {
                         perror("Send");
                         break;
                     }
                 }
-            }
-        	else
-            {
+            } else {
                 if (global_client[i]->socket == sockid) {
                     if (send(global_client[i]->socket, s, 4096, 0) < 0) {
                         perror("Send");
@@ -56,7 +53,6 @@ void send_msg(int sockid, char *s, int type){
                     }
                 }
             }
-            
         }
     }
 }
@@ -72,17 +68,28 @@ void create_client(client_info *client, int new_socket, struct sockaddr_in addre
     printf("%s", buff1);
     push_data_client(client);
 }
+char *get_list_client()
+{
+    char bigString[1000];
+    char *p = bigString;
 
-int chk_if_private(char msg[])
+    p = strcat(p, "===== Select the name you want chat it ===== \n");
+    for(int i=0; i<client_no; i++) {
+        if(*global_client[i]->name != '\0') {
+            p = strcat(p, global_client[i]->name);
+        }
+    }
+    p = strcat(p, "\n");
+    return p;
+}
+
+int get_socket_by_name(char msg[])
 {
     int socket_data;
-    if (msg)
-    {
+    if (msg) {
         printf("Limiter %s \n", msg);
-        for (int i = 0; i <client_no; i++)
-        {
-            if (strcmp(msg, global_client[i]->name) == 0)
-            {
+        for (int i = 0; i <client_no; i++) {
+            if (strcmp(msg, global_client[i]->name) == 0) {
                 printf("Socket %d \n", global_client[i]->socket);
                 socket_data = global_client[i]->socket;
                 break;
@@ -90,12 +97,36 @@ int chk_if_private(char msg[])
         }
         return socket_data;
     }
-    
-    
     return 0;
 }
 
+void push_data_sock(int arr[], int n, int val)
+{
+    int top = 0;
+    for(int i=0; i<n; i++){
+        if(arr[i] != 0) {
+            top++;
+        }
+    }
+    if(top > n) {
+        perror("Stack if overflow");
+    } else {
+        arr[top] = val;
+        top++;
+    }
+}
 
+int check_sock_private(int arr[], int n, int sock)
+{
+    for(int i=0; i<n; i++)
+    {
+        if(arr[i] == sock) {
+            return arr[i];
+        } else {
+            return 0;
+        }
+    }
+}
 
 void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
 {
@@ -111,6 +142,7 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
     FD_SET(server_fd, &master_set);
 
     int private_flag = 0;
+    int private_sock[20] = {};
     while (1) {
         memcpy(&working_set, &master_set, sizeof(master_set));
         int rc = select(max_sd + 1, &working_set, NULL, NULL, NULL);
@@ -148,20 +180,19 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
                         memset(read_msg, 0, 4096);
 
                         valread = recv(i, buffer, 1024, 0);
-                        
-                        if(valread > 0)
-                        {
+                        if(valread > 0) {
                             printf("Public chat \n");
-                            if (strcmp(buffer, "./private") == 10)
-                            {
+                            if (strcmp(buffer, "./private") == 10) {
                                 char private_name[30];
+                                send_msg(i, get_list_client(), 1);
                                 int recv_name = recv(i, private_name, 1024, 0);
-                                get_client_sock = chk_if_private(private_name);
-                                if (get_client_sock > 0)
+                                get_client_sock = get_socket_by_name(private_name);
+
+                                if (get_client_sock > 0) {
+                                    push_data_sock(private_sock, 20, i);
                                     private_flag = 1;
-                            }
-                            else
-                            {
+                                }
+                            } else {
                                 for (int j = 0; j < client_no; j++) {
                                     if (i == global_client[j]->socket) {
                                         sprintf(read_msg, "%s : %s", global_client[j]->name, buffer);
@@ -170,17 +201,13 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
                                 printf("%s \n", read_msg);
                                 send_msg(i, read_msg, 0);
                             }
-                        }
-                    	else
-                        {
+                        } else {
                             FD_CLR(i, &master_set);
                             close(i);
                             client_no--;
                             global_client[i] = NULL;
                             printf("User disconnected \n");
                         }
-                        
-                        
                     }
                     else if(private_flag > 0)
                     {
@@ -188,21 +215,19 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
                         memset(read_msg, 0, 4096);
                         printf("Private chat \n");
                         valread = recv(i, buffer, 1024, 0);
-                        printf("Val read : %d \n", valread);
-                        
-                        if (valread > 0) {
-                            printf("Get client sock : %d \n", get_client_sock);
 
+                        int private_sock_data = check_sock_private(private_sock, 20, i);
+                        if (valread > 0) {
                             for (int j = 0; j < client_no; j++) {
                                 if (i == global_client[j]->socket) {
                                     sprintf(read_msg, "%s : %s", global_client[j]->name, buffer);
                                 }
                             }
-                            
-                            send_msg(get_client_sock, read_msg, 1);
-                        }
-                        else 
-                        {
+                            if(private_sock_data != get_client_sock && private_sock_data != 0)
+                                send_msg(get_client_sock, read_msg, 1);
+                            else
+                                send_msg(private_sock[0], read_msg, 1);
+                        } else {
                             FD_CLR(i, &master_set);
                             close(i);
                             client_no--;

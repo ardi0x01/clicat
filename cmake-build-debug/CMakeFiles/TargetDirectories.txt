@@ -1,0 +1,3 @@
+/mnt/d/LATIHAN_CODE/TalkPrompt/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/mnt/d/LATIHAN_CODE/TalkPrompt/cmake-build-debug/CMakeFiles/edit_cache.dir
+/mnt/d/LATIHAN_CODE/TalkPrompt/cmake-build-debug/CMakeFiles/TalkPrompt.dir
