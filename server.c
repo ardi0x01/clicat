@@ -217,16 +217,28 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
                         valread = recv(i, buffer, 1024, 0);
 
                         int private_sock_data = check_sock_private(private_sock, 20, i);
+
                         if (valread > 0) {
                             for (int j = 0; j < client_no; j++) {
                                 if (i == global_client[j]->socket) {
                                     sprintf(read_msg, "%s : %s", global_client[j]->name, buffer);
                                 }
                             }
-                            if(private_sock_data != get_client_sock && private_sock_data != 0)
-                                send_msg(get_client_sock, read_msg, 1);
-                            else
-                                send_msg(private_sock[0], read_msg, 1);
+                            if(private_sock_data != get_client_sock && private_sock_data != 0){
+                                if(strcmp(buffer, "./quit_private") == 10) {
+                                    private_flag = 0;
+                                    send_msg(private_sock_data, "===== Public Chat ===== \n", 1);
+                                } else {
+                                    send_msg(get_client_sock, read_msg, 1);
+                                }
+                            } else {
+                                if(strcmp(buffer, "./quit_private") == 10) {
+                                    private_flag = 0;
+                                    send_msg(get_client_sock, "===== Public Chat ===== \n", 1);
+                                } else {
+                                    send_msg(private_sock[0], read_msg, 1);
+                                }
+                            }
                         } else {
                             FD_CLR(i, &master_set);
                             close(i);
