@@ -6,3 +6,5 @@ and then at client side just run file "client.c" files with this command <pre> .
 
 # Features
 type this <pre> ./private </pre> for use private chat feature 
+
+and type this <pre> ./quit_private </pre> for end private chat session
