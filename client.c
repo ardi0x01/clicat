@@ -3,7 +3,21 @@
 #if defined(_WIN32)
 #include <conio.h>
 #endif
-
+//void str_overwrite_stdout()
+//{
+//    printf("\r%s", "> ");
+//    fflush(stdout);
+//}
+void trim_newline_str(char* arr, int length)
+{
+    int i;
+    for (i = 0; i < length; i++) { // trim \n
+        if (arr[i] == '\n') {
+            arr[i] = '\0';
+            break;
+        }
+    }
+}
 int main(int argc, char *argv[]) {
 
 #if defined(_WIN32)
@@ -60,9 +74,10 @@ int main(int argc, char *argv[]) {
 
     printf("Connected.\n");
 
-    printf("Masukkan nama anda : ");
+    printf("Enter your name : ");
     char usr_name[100];
     fgets(usr_name, 100, stdin);
+//    trim_newline_str(usr_name, sizeof(usr_name));
     int bytes_sent = send(socket_peer, usr_name, strlen(usr_name), 0);
 
 

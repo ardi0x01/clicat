@@ -9,6 +9,13 @@
 #define PORT 8080
 #define MAX_CLIENT 20
 #define MAX_CHAT_REACH 100
+#define ANSI_COLOR_RED     "\x1b[31m"
+#define ANSI_COLOR_GREEN   "\x1b[32m"
+#define ANSI_COLOR_PUBLIC_CHAT  "\x1b[36m"
+#define ANSI_COLOR_BLUE    "\x1b[34m"
+#define ANSI_COLOR_PRIVATE "\x1b[93m"
+#define ANSI_COLOR_TEXT    "\x1b[100m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
 
 int client_no = 0;
 typedef struct user_info{
@@ -20,7 +27,8 @@ typedef struct user_info{
 
 client_info *global_client[MAX_CLIENT];
 
-void push_data_client(client_info *cli){
+void push_data_client(client_info *cli)
+{
     for(int i=0; i<MAX_CLIENT; i++){
         if(!global_client[i]) {
             global_client[i] = cli;
@@ -28,6 +36,17 @@ void push_data_client(client_info *cli){
         }
     }
 }
+void trim_newline_str(char* arr, int length)
+{
+    int i;
+    for (i = 0; i < length; i++) { // trim \n
+        if (arr[i] == '\n') {
+            arr[i] = '\0';
+            break;
+        }
+    }
+}
+
 void client_list()
 {
 	for(int i=0; i<client_no; i++)
@@ -35,7 +54,8 @@ void client_list()
         printf("%s \n", global_client[i]->name);
 	}
 }
-void send_msg(int sockid, char *s, int type){
+void send_msg(int sockid, char *s, int type)
+{
     for(int i=0; i<MAX_CHAT_REACH; i++) {
         if(global_client[i]){
             if(type == 0){
@@ -173,15 +193,14 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
                     if (new_socket > max_sd) {
                         max_sd = new_socket;
                     }
-                }
-                else {
+                } else {
                     if (private_flag == 0) {
                         memset(buffer, 0, 1024);
                         memset(read_msg, 0, 4096);
 
                         valread = recv(i, buffer, 1024, 0);
                         if(valread > 0) {
-                            printf("Public chat \n");
+                            printf("[LOG] Public chat \n");
                             if (strcmp(buffer, "./private") == 10) {
                                 char private_name[30];
                                 send_msg(i, get_list_client(), 1);
@@ -195,7 +214,7 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
                             } else {
                                 for (int j = 0; j < client_no; j++) {
                                     if (i == global_client[j]->socket) {
-                                        sprintf(read_msg, "%s : %s", global_client[j]->name, buffer);
+                                        sprintf(read_msg, ANSI_COLOR_PUBLIC_CHAT "%s" ANSI_COLOR_RESET  ANSI_COLOR_TEXT ": %s" ANSI_COLOR_RESET , global_client[j]->name, buffer);
                                     }
                                 }
                                 printf("%s \n", read_msg);
@@ -208,12 +227,10 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
                             global_client[i] = NULL;
                             printf("User disconnected \n");
                         }
-                    }
-                    else if(private_flag > 0)
-                    {
+                    } else if(private_flag > 0) {
                         memset(buffer, 0, 1024);
                         memset(read_msg, 0, 4096);
-                        printf("Private chat \n");
+                        printf("[LOG] Private chat \n");
                         valread = recv(i, buffer, 1024, 0);
 
                         int private_sock_data = check_sock_private(private_sock, 20, i);
@@ -221,7 +238,7 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
                         if (valread > 0) {
                             for (int j = 0; j < client_no; j++) {
                                 if (i == global_client[j]->socket) {
-                                    sprintf(read_msg, "%s : %s", global_client[j]->name, buffer);
+                                    sprintf(read_msg, ANSI_COLOR_PRIVATE "%s" ANSI_COLOR_RESET ANSI_COLOR_TEXT ": %s" ANSI_COLOR_RESET , global_client[j]->name, buffer);
                                 }
                             }
                             if(private_sock_data != get_client_sock && private_sock_data != 0){
@@ -252,8 +269,6 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
         }
     }
 }
-
-
 
 void run_server()
 {
@@ -300,5 +315,4 @@ int main(int argc, char const *argv[])
 {
     run_server();
     return 0;
-
 }
