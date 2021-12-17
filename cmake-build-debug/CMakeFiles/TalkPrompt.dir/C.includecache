@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/mnt/d/LATIHAN_CODE/TalkPrompt/server.c
+/Users/ardinugraha/Documents/EXPERIMENT/TalkPrompt/server.c
 unistd.h
 -
 stdio.h
@@ -20,9 +20,9 @@ netinet/in.h
 string.h
 -
 talk.h
-/mnt/d/LATIHAN_CODE/TalkPrompt/talk.h
+/Users/ardinugraha/Documents/EXPERIMENT/TalkPrompt/talk.h
 
-/mnt/d/LATIHAN_CODE/TalkPrompt/talk.h
+/Users/ardinugraha/Documents/EXPERIMENT/TalkPrompt/talk.h
 winsock2.h
 -
 ws2tcpip.h

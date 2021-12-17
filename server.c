@@ -6,7 +6,7 @@
 #include <string.h>
 #include "talk.h"
 
-#define PORT 8080
+#define PORT 1234
 #define MAX_CLIENT 20
 #define MAX_CHAT_REACH 100
 #define ANSI_COLOR_RED     "\x1b[31m"
@@ -272,6 +272,7 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
 
 void run_server()
 {
+    printf("Server is run \n");
     int server_fd;
     struct sockaddr_in address;
     int addrlen = sizeof(address);
@@ -285,7 +286,7 @@ void run_server()
     }
 
     // Forcefully attaching socket to the port 8080
-    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT,
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR,
         &opt, sizeof(opt)))
     {
         perror("setsockopt");

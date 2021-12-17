@@ -8,9 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/mnt/d/LATIHAN_CODE/TalkPrompt/server.c" "/mnt/d/LATIHAN_CODE/TalkPrompt/cmake-build-debug/CMakeFiles/TalkPrompt.dir/server.c.o"
+  "/Users/ardinugraha/Documents/EXPERIMENT/TalkPrompt/server.c" "/Users/ardinugraha/Documents/EXPERIMENT/TalkPrompt/cmake-build-debug/CMakeFiles/TalkPrompt.dir/server.c.o"
   )
-set(CMAKE_C_COMPILER_ID "GNU")
+set(CMAKE_C_COMPILER_ID "AppleClang")
 
 # The include file search paths:
 set(CMAKE_C_TARGET_INCLUDE_PATH
