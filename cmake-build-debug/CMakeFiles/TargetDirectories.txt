@@ -1,3 +1,0 @@
-/Users/ardinugraha/Documents/EXPERIMENT/TalkPrompt/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Users/ardinugraha/Documents/EXPERIMENT/TalkPrompt/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/ardinugraha/Documents/EXPERIMENT/TalkPrompt/cmake-build-debug/CMakeFiles/TalkPrompt.dir

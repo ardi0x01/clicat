@@ -1,4 +1,6 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "CodeBlocks - Unix Makefiles" /Users/ardinugraha/Documents/EXPERIMENT/TalkPrompt
--- Configuring done
--- Generating done
--- Build files have been written to: /Users/ardinugraha/Documents/EXPERIMENT/TalkPrompt/cmake-build-debug
+C:\Windows\system32\wsl.exe --distribution Ubuntu --exec /usr/bin/zsh -c "export CLION_IDE=TRUE && export JETBRAINS_IDE=TRUE && cd /mnt/d/MY_ART/talk-prompt/cmake-build-debug && /usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G 'CodeBlocks - Unix Makefiles' -S /mnt/d/MY_ART/talk-prompt -B /mnt/d/MY_ART/talk-prompt/cmake-build-debug"
+CMake Error at CMakeLists.txt:1 (cmake_minimum_required):
+  CMake 3.20 or higher is required.  You are running version 3.16.3
+
+
+-- Configuring incomplete, errors occurred!

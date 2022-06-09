@@ -110,11 +110,9 @@ char *get_list_client(int sockfd)
 int get_socket_by_name(char msg[])
 {
     int socket_data;
-    printf("[GET SOCKET BY NAME] Name : %s \n", msg);
     if (msg) {
         for (int i = 0; i <client_no; i++) {
             if (strcmp(msg, global_client[i]->name) == 0) {
-                printf("[GET SOCKET BY NAME] Socket %d \n", global_client[i]->socket);
                 socket_data = global_client[i]->socket;
                 break;
             }
@@ -244,23 +242,19 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
                     memset(read_msg, 0, 4096);
                     valread = recv(event_fd, buffer, 1024, 0);
                     if(valread > 0) {
-                        printf("[LOG] Public chat \n");
                         if (strcmp(buffer, "./private") == 10) {
                             char private_name[30];
                             send_msg(event_fd, get_list_client(event_fd), 1);
                             memset(private_name, 0, 30);
                             int recv_name = recv(event_fd, private_name, 1024, 0);
-                            printf("[LOG] Private name : %s \n", private_name);
                             get_client_sock = get_socket_by_name(private_name);
                             if (get_client_sock > 0) {
                                 printf("Private flag set to 1 \n");
                                 push_data_sock(private_sock, 20, event_fd);
                                 private_flag = 1;
                             } else {
-                                printf("[LOG] Name not found \n");
                                 for (int j = 0; j < client_no; j++) {
                                     if (event_fd == global_client[j]->socket) {
-                                        printf("[LOG] Same Sock Private Failed \n");
                                         send_msg(global_client[j]->socket, "Name Not Found! \n", 0);
                                     }
                                 }
@@ -282,23 +276,15 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
                     printf("[LOG] Private chat \n");
                     valread = recv(event_fd, buffer, 1024, 0);
 
-                    printf("[PRIVATE] Read : %s \n ", buffer);
                     int private_sock_data = check_sock_private(private_sock, 20, event_fd);
                     if (valread > 0) {
-                        printf("[PRIVATE] Valread > 0 \n");
                         for (int j = 0; j < client_no; j++) {
-                            printf("[PRIVATE] Loop \n");
-                            printf("[PRIVATE] Event fd : %d \n",event_fd);
-                            printf("[PRIVATE] Socket : %d \n", global_client[j]->socket);
                             if (event_fd == global_client[j]->socket) {
                                 printf("Same \n");
                                 sprintf(read_msg, ANSI_COLOR_PRIVATE "%s" ANSI_COLOR_RESET ANSI_COLOR_TEXT ": %s" ANSI_COLOR_RESET , global_client[j]->name, buffer);
                             }
                         }
-                        printf("[PRIVATE] Message : %s \n", buffer);
-                        printf("[PRIVATE] Private Sock : %d \n", private_sock_data);
                         if(private_sock_data != get_client_sock && private_sock_data != 0){
-                            printf("[PRIVATE] not same sock, client sock : %d \n", get_client_sock);
                             if(strcmp(buffer, "./quit_private") == 10) {
                                 private_flag = 0;
                                 send_msg(private_sock_data, "===== Public Chat ===== \n", 1);
@@ -306,7 +292,6 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
                                 send_msg(get_client_sock, read_msg, 1);
                             }
                         } else {
-                            printf("[PRIVATE] Same sock \n");
                             if(strcmp(buffer, "./quit_private") == 10) {
                                 private_flag = 0;
                                 send_msg(get_client_sock, "===== Public Chat ===== \n", 1);
