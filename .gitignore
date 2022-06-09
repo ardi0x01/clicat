@@ -1,6 +1,0 @@
-.vs
-.gitignore
-cmake-build-debug
-client
-server
-.idea
