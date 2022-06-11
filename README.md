@@ -1,4 +1,4 @@
-# TalkPrompt
+# Clicat
 This is simple chat server communicate based on with tcp/ip protocol, this is only support for macOs only
 
 Just established the server just run file "server.c" files and type this command  <pre>./server</pre> on your terminal
