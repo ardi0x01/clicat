@@ -35,12 +35,6 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
         struct kevent change_event[4],
                 event[4];
         int kq = kqueue();
-
-        // Create event 'filter', these are the events we want to monitor.
-        // Here we want to monitor: socket_listen_fd, for the events: EVFILT_READ
-        // (when there is data to be read on the socket), and perform the following
-        // actions on this kevent: EV_ADD and EV_ENABLE (add the event to the kqueue
-        // and enable it).
         EV_SET(change_event, server_fd, EVFILT_READ, EV_ADD | EV_ENABLE, 0, 0, 0);
 
         // Register kevent with the kqueue.
