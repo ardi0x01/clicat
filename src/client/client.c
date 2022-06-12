@@ -1,4 +1,5 @@
 #include "client.h"
+
 #if defined(_WIN32)
 #include <conio.h>
 #endif
@@ -8,8 +9,8 @@
 //    fflush(stdout);
 //}
 
-int run_client(char *ip, char *port) {
-
+int run_client(char *ip, char *port)
+{
 #if defined(_WIN32)
         WSADATA d;
     if (WSAStartup(MAKEWORD(2, 2), &d)) {
@@ -17,6 +18,9 @@ int run_client(char *ip, char *port) {
         return 1;
     }
 #endif
+
+
+
         printf("Configuring remote address...\n");
         struct addrinfo hints;
         memset(&hints, 0, sizeof(hints));

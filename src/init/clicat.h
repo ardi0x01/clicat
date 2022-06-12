@@ -11,6 +11,7 @@
 #pragma comment(lib, "ws2_32.lib")
 
 #else
+#define MAX_EVENTS 4
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -18,7 +19,7 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <errno.h>
-
+#include <sys/epoll.h>
 #endif
 
 
