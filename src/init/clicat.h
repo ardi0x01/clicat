@@ -34,8 +34,10 @@
 #define GETSOCKETERRNO() (errno)
 #endif
 
+#if defined(__APPLE__)
+#include <sys/event.h>
+#endif
 
 #include <stdio.h>
 #include <string.h>
-#include <sys/event.h>
 #include <stdlib.h>
