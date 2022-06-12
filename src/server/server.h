@@ -16,8 +16,7 @@
 #define ANSI_COLOR_PRIVATE "\x1b[93m"
 #define ANSI_COLOR_TEXT    "\x1b[100m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
-
-int client_no = 0;
+extern int client_no;
 typedef struct user_info{
     int socket;
     char name[30];

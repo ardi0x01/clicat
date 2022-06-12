@@ -1,4 +1,4 @@
-#include "server.h"
+#include "../server.h"
 
 void create_client(client_info *client, int new_socket, struct sockaddr_in address,char *buff1,char *buff2) {
         client_no++;
@@ -21,13 +21,6 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
         char user_data[100];
         int opt = 1, new_events;
         int new_socket = 0, valread, get_client_sock;
-
-        /** DEPRECATED SYSCALL
-    //    fd_set master_set, working_set;
-    //    FD_ZERO(&master_set);
-    //    FD_SET(server_fd, &master_set);
-         **/
-
         int max_sd = server_fd;
         int private_flag = 0;
         int private_sock[20] = {};
@@ -51,19 +44,6 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
                         perror("kevent");
                         exit(1);
                 }
-                /** DEPRECATED SYSCALL
-        //        memcpy(&working_set, &master_set, sizeof(master_set));
-        //        int rc = select(max_sd + 1, &working_set, NULL, NULL, NULL);
-        //        if (rc < 0) {
-        //            perror("select() failed");
-        //            break;
-        //        }
-        //        if (rc == 0)
-        //        {
-        //            printf("  select() timed out.  End program.\n");
-        //            break;
-        //        }
-                 **/
                 for (int i = 0; new_events > i; i++) {
                         int event_fd = event[i].ident;
                         if (event[i].flags & EV_EOF)
@@ -73,7 +53,6 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
                                 global_client[event_fd] = NULL;
                                 close(event_fd);
                         }
-//            if (FD_ISSET(i, &working_set)) {
                         if (event_fd == server_fd) {
                                 if ((new_socket = accept(event_fd, (struct sockaddr*)&address,(socklen_t*)&addrlen)) < 0)
                                 {
@@ -123,7 +102,6 @@ void recv_and_send_msg(int server_fd, struct sockaddr_in address, int addrlen)
                                                                                 global_client[j]->name, buffer);
                                                                 }
                                                         }
-//                            printf("%s", read_msg);
                                                         send_msg(event_fd, read_msg, 0);
                                                 }
                                         }

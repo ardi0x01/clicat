@@ -1,5 +1,5 @@
 #include "server.h"
-
+int client_no = 0;
 void push_data_client(client_info *cli)
 {
         for(int i=0; i<MAX_CLIENT; i++){
@@ -76,6 +76,7 @@ int check_sock_private(int arr[], int n, int sock)
                         return 0;
                 }
         }
+        return 0;
 }
 char *get_list_client(int sockfd)
 {

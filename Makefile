@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall
-SRC = $(shell find ./ -name '*.c')
+SRC = $(shell find ./ -name '*.c' -not -path "./src/server/darwin/*.c")
 HEADER = $(shell find ./ -name '*.H')
 OBJ = $(SRC:%.c=%.o)
 DEPS = $(HEADER)
@@ -13,3 +13,5 @@ DEPS = $(HEADER)
 
 go: $(OBJ)
 	gcc $(CFLAGS) -o $@ $^
+clean:
+	rm -f $(OBJ)

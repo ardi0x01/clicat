@@ -7,16 +7,7 @@
 //    printf("\r%s", "> ");
 //    fflush(stdout);
 //}
-void trim_newline_str(char* arr, int length)
-{
-        int i;
-        for (i = 0; i < length; i++) { // trim \n
-                if (arr[i] == '\n') {
-                        arr[i] = '\0';
-                        break;
-                }
-        }
-}
+
 int run_client(char *ip, char *port) {
 
 #if defined(_WIN32)
@@ -71,7 +62,7 @@ int run_client(char *ip, char *port) {
         char usr_name[100];
         fgets(usr_name, 100, stdin);
 //    trim_newline_str(usr_name, sizeof(usr_name));
-        int bytes_sent = send(socket_peer, usr_name, strlen(usr_name), 0);
+        send(socket_peer, usr_name, strlen(usr_name), 0);
 
 
         printf("To send data, enter text followed by enter.\n");
@@ -111,7 +102,7 @@ int run_client(char *ip, char *port) {
 #endif
                         char read[4096];
                         if (!fgets(read, 4096, stdin)) break;
-                        int bytes_sent = send(socket_peer, read, strlen(read), 0);
+                        send(socket_peer, read, strlen(read), 0);
                 }
         } //end while(1)
 
